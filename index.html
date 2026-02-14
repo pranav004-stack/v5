@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentine Proposal</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #ffd1dc, #ff4f81);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  padding: 20px;
+  overflow: hidden;
+}
+
+/* Floating Hearts */
+.heart {
+  position: fixed;
+  bottom: -20px;
+  animation: floatUp linear infinite;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@keyframes floatUp {
+  0% { transform: translateY(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-110vh); opacity: 0; }
+}
+
+/* Bear */
+.bear {
+  font-size: 60px;
+  animation: bounce 1.5s infinite;
+}
+
+@keyframes bounce {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+
+/* Container */
+.container {
+  width: 100%;
+  max-width: 500px;
+  z-index: 10;
+}
+
+h1 {
+  font-family: 'Dancing Script', cursive;
+  font-size: clamp(28px, 6vw, 42px);
+  margin: 20px 0;
+}
+
+.subtitle {
+  font-style: italic;
+  margin-bottom: 20px;
+  font-size: clamp(14px, 4vw, 16px);
+}
+
+.closing {
+  margin-top: 20px;
+  font-size: clamp(14px, 4vw, 16px);
+}
+
+/* Buttons */
+.buttons {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+#yesBtn {
+  padding: 14px 32px;
+  font-size: 18px;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  color: white;
+  background: linear-gradient(to right, #ff4f81, #ff1e56);
+  transition: 0.3s;
+}
+
+#yesBtn:hover {
+  box-shadow: 0 0 20px rgba(255, 0, 90, 0.8);
+  transform: scale(1.1);
+}
+
+#noBtn {
+  padding: 10px 22px;
+  font-size: 15px;
+  border-radius: 50px;
+  border: 2px solid red;
+  background: white;
+  color: red;
+  cursor: pointer;
+}
+
+/* Celebration */
+.celebration {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(to bottom right, #ff4f81, #ff1e56);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Dancing Script', cursive;
+  font-size: clamp(40px, 10vw, 70px);
+  color: white;
+  animation: pulse 1s infinite;
+  z-index: 100;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.hidden {
+  display: none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container" id="mainContent">
+  <div class="bear">🐻</div>
+
+  <h1>Will You Be My Valentine, Payushi?</h1>
+  <div class="subtitle">I've been gathering courage to ask you this...</div>
+
+  <div class="buttons">
+    <button id="yesBtn">Yes ❤️</button>
+    <button id="noBtn">No</button>
+  </div>
+
+  <div class="closing">
+    Every thing is pretty but you are prettier.
+  </div>
+</div>
+
+<div id="celebration" class="celebration hidden">
+  Mjhe to phle hi pata tha😂.
+  (scripted prank)
+</div>
+
+<script>
+const messages = [
+  "ye kya kr diya.....hurt hogya m😂",
+];
+
+let msgIndex = 0;
+const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
+const mainContent = document.getElementById("mainContent");
+const celebration = document.getElementById("celebration");
+
+/* Floating Hearts */
+let heartsRunning = true;
+
+function createHeart() {
+  if (!heartsRunning) return;
+
+  const heart = document.createElement("div");
+  heart.classList.add("heart");
+  heart.innerHTML = "❤️";
+
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.fontSize = (Math.random() * 20 + 15) + "px";
+  heart.style.animationDuration = (Math.random() * 5 + 5) + "s";
+
+  document.body.appendChild(heart);
+
+  setTimeout(() => heart.remove(), 10000);
+}
+
+setInterval(createHeart, 800);
+
+/* Move No Button */
+function moveNoButton() {
+  const yesRect = yesBtn.getBoundingClientRect();
+  const btnWidth = noBtn.offsetWidth;
+  const btnHeight = noBtn.offsetHeight;
+
+  let x, y;
+  do {
+    x = Math.random() * (window.innerWidth - btnWidth);
+    y = Math.random() * (window.innerHeight - btnHeight);
+  } while (
+    x < yesRect.right &&
+    x + btnWidth > yesRect.left &&
+    y < yesRect.bottom &&
+    y + btnHeight > yesRect.top
+  );
+
+  noBtn.style.position = "fixed";
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
+
+  noBtn.innerText = messages[msgIndex];
+  msgIndex = (msgIndex + 1) % messages.length;
+}
+
+noBtn.addEventListener("mouseover", moveNoButton);
+noBtn.addEventListener("click", moveNoButton);
+noBtn.addEventListener("touchstart", moveNoButton);
+
+/* Yes Button */
+yesBtn.addEventListener("click", () => {
+  heartsRunning = false;
+  mainContent.classList.add("hidden");
+  celebration.classList.remove("hidden");
+});
+</script>
+
+</body>
+</html>
